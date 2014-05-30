@@ -62,6 +62,13 @@ module Mongoid
         relation.do_or_do_not(:in_memory) || relation
       elsif fields[attribute].try(:localized?)
         attributes[attribute]
+      # for attr like `hash.key.key`
+      elsif attribute.split('.').length > 1
+        ary = attribute.split('.')
+        while ary == []
+          attribute = attribute[ary.shift]
+        end
+      #
       else
         send(attr)
       end
